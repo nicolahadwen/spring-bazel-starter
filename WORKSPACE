@@ -38,7 +38,8 @@ maven_install(
         "org.springframework:spring-webmvc:%s" % SPRING_VERSION,
         "org.springframework.security:spring-security-config:%s" % SPRING_VERSION,
         "org.springframework.boot:spring-boot:%s" % SPRING_BOOT_VERSION,
-        "org.springframework.security.oauth:spring-security-oauth2:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.boot:spring-boot-starter-web:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.security.oauth:spring-security-oauth2:%s" % SPRING_BOOT_VERSION
     ],
     repositories = [
             "https://jcenter.bintray.com/",
