@@ -19,7 +19,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         CorsConfiguration corsConfig = new CorsConfiguration();
-        // todo: setup for prod, make env variable and based on env
+        // todo: make env variable
         corsConfig.setAllowedOrigins(Collections.singletonList("http://localhost:8081"));
         corsConfig.setAllowedMethods(
                 Arrays.asList(
