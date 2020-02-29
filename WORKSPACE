@@ -13,9 +13,9 @@ http_archive(
 load("@rules_jvm_external//:defs.bzl", "maven_install")
 load("@bazel_tools//tools/build_defs/repo:maven_rules.bzl", "maven_dependency_plugin", "maven_jar")
 
-# versions
-SPRING_VERSION = "5.2.4.RELEASE"
-SPRING_BOOT_VERSION = "2.2.5.RELEASE"
+# spring versions
+SPRING_VERSION = "5.1.5.RELEASE"
+SPRING_BOOT_VERSION = "2.2.2.RELEASE"
 
 # Install dependencies
 maven_install(
