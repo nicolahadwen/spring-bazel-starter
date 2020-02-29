@@ -18,6 +18,7 @@ java_library(
             "@maven//:org_springframework_boot_spring_boot_autoconfigure",
             "@maven//:org_springframework_security_spring_security_config",
             "@maven//:org_springframework_security_oauth_spring_security_oauth2",
+            "@maven//:org_springframework_spring_context",
             "@maven//:org_springframework_spring_web",
             "@maven//:org_springframework_spring_webmvc"
 

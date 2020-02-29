@@ -34,6 +34,7 @@ maven_install(
         "org.springframework.boot:spring-boot-starter-web:%s" % SPRING_BOOT_VERSION,
         "org.springframework.boot:spring-boot-starter-security:%s" % SPRING_BOOT_VERSION,
         # spring
+        "org.springframework:spring-context:%s" % SPRING_VERSION,
         "org.springframework:spring-web:%s" % SPRING_VERSION,
         "org.springframework:spring-webmvc:%s" % SPRING_VERSION,
         "org.springframework.security:spring-security-config:%s" % SPRING_VERSION,
