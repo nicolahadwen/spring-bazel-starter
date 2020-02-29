@@ -1,0 +1,38 @@
+package(default_visibility = ["//visibility:private"])
+
+java_library(
+    name = "web-service",
+    srcs = glob([
+        "**/src/main/**/*.java",
+    ]),
+    deps = [
+            "//:lombok",
+            "@maven//:org_apache_commons_commons_lang3",
+            "@maven//:org_javassist_javassist",
+            "@maven//:javax_servlet_javax_servlet_api",
+            "@maven//:org_projectlombok_lombok",
+            "@maven//:org_springframework_boot_spring_boot",
+            "@maven//:org_springframework_boot_spring_boot_autoconfigure",
+            "@maven//:org_springframework_security_spring_security_config",
+            "@maven//:org_springframework_spring_web",
+            "@maven//:org_springframework_spring_webmvc"
+
+        ],
+)
+
+load("//:junit5.bzl", "java_junit5_test")
+
+# Use java_test after bazel officially support junit5
+java_junit5_test(
+    name = "web-service-test",
+    srcs = glob([
+            "**/src/test/java/**/*.java",
+    ]),
+    test_package = "co.hadwen",
+    deps = [
+        "@maven//:org_springframework_spring_context",
+        "@maven//:org_springframework_spring_web",
+        "@maven_test//:org_assertj_assertj_core",
+        "@maven_test//:org_mockito_mockito_core",
+    ],
+)

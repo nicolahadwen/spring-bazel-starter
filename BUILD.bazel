@@ -1,0 +1,26 @@
+package(default_visibility = ["//visibility:public"])
+
+java_plugin(
+    name = "lombok_plugin",
+    generates_api = 1,
+    processor_class = "lombok.launch.AnnotationProcessorHider$AnnotationProcessor",
+    visibility = ["//visibility:private"],
+    deps = [
+        "@maven//:org_projectlombok_lombok",
+    ],
+)
+
+java_library(
+    name = "starter-backend",
+    srcs = glob([
+        "**/src/**/*.java"
+    ]),
+)
+
+java_library(
+    name = "lombok",
+    exported_plugins = [":lombok_plugin"],
+    neverlink = 1,
+    exports = ["@maven//:org_projectlombok_lombok"],
+)
+
