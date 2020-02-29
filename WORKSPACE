@@ -14,9 +14,8 @@ load("@rules_jvm_external//:defs.bzl", "maven_install")
 load("@bazel_tools//tools/build_defs/repo:maven_rules.bzl", "maven_dependency_plugin", "maven_jar")
 
 # versions
-SPRING_VERSION = "5.1.5.RELEASE"
-SPRINGVAULT_VERSION = "2.1.3.RELEASE"
-SPRING_BOOT_VERSION = "2.2.2.RELEASE"
+SPRING_VERSION = "5.2.4.RELEASE"
+SPRING_BOOT_VERSION = "2.2.5.RELEASE"
 
 # Install dependencies
 maven_install(
@@ -39,6 +38,7 @@ maven_install(
         "org.springframework:spring-webmvc:%s" % SPRING_VERSION,
         "org.springframework.security:spring-security-config:%s" % SPRING_VERSION,
         "org.springframework.boot:spring-boot:%s" % SPRING_BOOT_VERSION,
+        "org.springframework.security.oauth:spring-security-oauth2:%s" % SPRING_BOOT_VERSION,
     ],
     repositories = [
             "https://jcenter.bintray.com/",
