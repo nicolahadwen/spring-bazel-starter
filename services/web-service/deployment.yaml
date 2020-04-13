@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ritualwebdeployment
+  labels:
+    app: ritual-aphrodite
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: ritual-aphrodite
+      tier: fronted-web
+  template:
+    metadata:
+      labels:
+        app: ritual-aphrodite
+        tier: fronted-web
+    spec:
+      containers:
+        - image: ritual-aphrodite/web:0.0.00
+          name: ritual-aphrodite-web
+          imagePullPolicy: "Always"
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          resources:
+            limits:
+              memory: "200Mi"
+            requests:
+              memory: "100Mi"
+          args: ["--vm", "1", "--vm-bytes", "150M", "--vm-hang", "1"]
+          env:
+            - name: UI_ORIGIN_DOMAIN
+              valueFrom:
+                secretKeyRef:
+                  name: ui-origin
+                  key: domain
+          securityContext:
+            runAsUser: 2  # non-root user
+            allowPrivilegeEscalation: false
+          volumeMounts:
+            - name: cloudsql-instance-credentials
+              mountPath: /secrets/cloudsql
+              readOnly: true
+      volumes:
+        - name: cloudsql-instance-credentials
+          secret:
+            secretName: cloudsql-instance-credentials

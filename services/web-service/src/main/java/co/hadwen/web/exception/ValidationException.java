@@ -1,5 +1,6 @@
 package co.hadwen.web.exception;
 
+import co.hadwen.web.Dto;
 import co.hadwen.web.exception.dto.ValidationErrorDTO;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +17,7 @@ public class ValidationException extends RuntimeException {
     @Override
     public String getMessage() {
         return errorDTO.getInvalidValues().stream()
-                .map(e -> String.format(FIELD_MESSAGE_FORMAT, e.getField(), e.getType().name()))
+                .map(Dto::toJsonString)
                 .collect(Collectors.joining(FIELD_DELIMITER));
     }
 }

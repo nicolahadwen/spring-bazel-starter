@@ -1,5 +1,7 @@
 package co.hadwen.web.security;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -29,7 +31,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                         RequestMethod.OPTIONS.name(),
                         RequestMethod.PATCH.name()));
         corsConfig.addAllowedHeader("*");
-        corsConfig.addExposedHeader("location");
+        corsConfig.addExposedHeader(ExposedHeaders.LOCATION.getFormattedName());
         corsConfig.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", corsConfig);
@@ -39,5 +41,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 //todo: figure out what this is.
                 .csrf()
                 .disable();
+    }
+
+
+    @AllArgsConstructor
+    @Getter
+    enum ExposedHeaders {
+        LOCATION("location");
+        private final String formattedName;
     }
 }

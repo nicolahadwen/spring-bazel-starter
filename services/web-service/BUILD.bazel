@@ -1,28 +1,26 @@
 package(default_visibility = ["//visibility:private"])
 
-
-
 java_library(
-    name = "web-service",
-    srcs = glob([
-        "**/src/main/**/*.java",
-    ]),
-    deps = [
-            "//:lombok",
-            "@maven//:org_apache_commons_commons_lang3",
-            "@maven//:org_javassist_javassist",
-            "@maven//:javax_servlet_javax_servlet_api",
-            "@maven//:org_projectlombok_lombok",
-            "@maven//:org_springframework_boot_spring_boot",
-            "@maven//:org_springframework_boot_spring_boot_starter_web",
-            "@maven//:org_springframework_boot_spring_boot_autoconfigure",
-            "@maven//:org_springframework_security_spring_security_config",
-            "@maven//:org_springframework_security_oauth_spring_security_oauth2",
-            "@maven//:org_springframework_spring_context",
-            "@maven//:org_springframework_spring_web",
-            "@maven//:org_springframework_spring_webmvc"
-
-        ],
+   name = "web-service",
+   srcs = glob([
+       "**/src/main/**/*.java",
+   ]),
+   deps = [
+       "//:lombok",
+       "@maven//:com_google_code_gson_gson",
+       "@maven//:org_apache_commons_commons_lang3",
+       "@maven//:org_javassist_javassist",
+       "@maven//:javax_servlet_javax_servlet_api",
+       "@maven//:org_projectlombok_lombok",
+       "@maven//:org_springframework_boot_spring_boot",
+       "@maven//:org_springframework_boot_spring_boot_starter_web",
+       "@maven//:org_springframework_boot_spring_boot_autoconfigure",
+       "@maven//:org_springframework_security_spring_security_config",
+       "@maven//:org_springframework_security_oauth_spring_security_oauth2",
+       "@maven//:org_springframework_spring_context",
+       "@maven//:org_springframework_spring_web",
+       "@maven//:org_springframework_spring_webmvc"
+   ]
 )
 
 load("//:junit5.bzl", "java_junit5_test")
@@ -35,10 +33,10 @@ java_junit5_test(
     ]),
     test_package = "co.hadwen",
     deps = [
-        "@maven//:org_springframework_spring_context",
-        "@maven//:org_springframework_spring_web",
-        "@maven_test//:org_assertj_assertj_core",
-        "@maven_test//:org_mockito_mockito_core",
+       "@maven//:org_springframework_spring_context",
+       "@maven//:org_springframework_spring_web",
+       "@maven_test//:org_assertj_assertj_core",
+       "@maven_test//:org_mockito_mockito_core",
     ],
 )
 
@@ -49,4 +47,49 @@ java_binary(
     runtime_deps = [
         ":web-service",
     ],
+)
+
+# Java image
+load("@io_bazel_rules_docker//java:image.bzl", "java_image")
+load("@io_bazel_rules_docker//container:container.bzl", "container_image")
+
+java_image(
+    name = "web_service_image",
+    # Put these runfiles into their own layer.
+    main_class = "co.hadwen.web.Application",
+    # the source file we need to compile
+    srcs = ["src/main/java/co/hadwen/web/Application.java"],
+    deps = [
+           "web-service",
+           "//:lombok",
+           "@maven//:com_google_code_gson_gson",
+           "@maven//:org_apache_commons_commons_lang3",
+           "@maven//:org_javassist_javassist",
+           "@maven//:javax_servlet_javax_servlet_api",
+           "@maven//:org_projectlombok_lombok",
+           "@maven//:org_springframework_boot_spring_boot",
+           "@maven//:org_springframework_boot_spring_boot_starter_web",
+           "@maven//:org_springframework_boot_spring_boot_autoconfigure",
+           "@maven//:org_springframework_security_spring_security_config",
+           "@maven//:org_springframework_security_oauth_spring_security_oauth2",
+           "@maven//:org_springframework_spring_context",
+           "@maven//:org_springframework_spring_web",
+           "@maven//:org_springframework_spring_webmvc"
+       ]
+)
+
+# Container image
+container_image(
+    # the name of this target we call in the `k8s_deploy` rule below
+    name = "web_service_container_image",
+    # the base image for this image, which is a Bazel target defined above
+    # Bazel will call the above target first, and use its output as the
+    # base image for this image
+    base = ":web_service_image",
+    # expose the 8080 port, which is what our Java app runs on
+    ports = ["8080"],
+    # The directory in which to expand the base image files
+    directory = "/app",
+    # Initial working directory when running the image
+    workdir = "/app",
 )

@@ -16,6 +16,8 @@ load("@bazel_tools//tools/build_defs/repo:maven_rules.bzl", "maven_dependency_pl
 # spring versions
 SPRING_VERSION = "5.1.5.RELEASE"
 SPRING_BOOT_VERSION = "2.2.2.RELEASE"
+#gson version
+GSON_VERSION = "2.8.6"
 
 # Install dependencies
 maven_install(
@@ -40,7 +42,9 @@ maven_install(
         "org.springframework.security:spring-security-config:%s" % SPRING_VERSION,
         "org.springframework.boot:spring-boot:%s" % SPRING_BOOT_VERSION,
         "org.springframework.boot:spring-boot-starter-web:%s" % SPRING_BOOT_VERSION,
-        "org.springframework.security.oauth:spring-security-oauth2:%s" % SPRING_BOOT_VERSION
+        "org.springframework.security.oauth:spring-security-oauth2:%s" % SPRING_BOOT_VERSION,
+        #gson
+        "com.google.code.gson:gson:%s" % GSON_VERSION
     ],
     repositories = [
             "https://jcenter.bintray.com/",
@@ -87,4 +91,45 @@ maven_install(
         "https://jcenter.bintray.com/",
         "https://maven.google.com",
     ],
+)
+
+# Docker
+http_archive(
+    name = "io_bazel_rules_docker",
+    sha256 = "dc97fccceacd4c6be14e800b2a00693d5e8d07f69ee187babfd04a80a9f8e250",
+    strip_prefix = "rules_docker-0.14.1",
+    urls = ["https://github.com/bazelbuild/rules_docker/releases/download/v0.14.1/rules_docker-v0.14.1.tar.gz"],
+)
+
+
+load(
+    "@io_bazel_rules_docker//repositories:repositories.bzl",
+    container_repositories = "repositories",
+)
+container_repositories()
+
+# This is NOT needed when going through the language lang_image
+# "repositories" function(s).
+load("@io_bazel_rules_docker//repositories:deps.bzl", container_deps = "deps")
+
+container_deps()
+
+load(
+    "@io_bazel_rules_docker//container:container.bzl",
+    "container_pull",
+    "container_image"
+)
+
+load(
+    "@io_bazel_rules_docker//java:image.bzl",
+    _java_image_repos = "repositories",
+)
+
+_java_image_repos()
+
+container_pull(
+  name = "java_base",
+  registry = "gcr.io",
+  repository = "distroless/java",
+  digest = "sha256:ab2c346f00430bc4a6acb5ff282e99f532c386ea4277e1e472f493760f72fe73"
 )
